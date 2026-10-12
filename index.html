@@ -48,9 +48,9 @@
       var buildUrl = "Build";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/WebGL.data.unityweb",
-        frameworkUrl: buildUrl + "/WebGL.framework.js.unityweb",
-        codeUrl: buildUrl + "/WebGL.wasm.unityweb",
+        dataUrl: buildUrl + "/73e80fffd708533c356631303d95053f.data.unityweb",
+        frameworkUrl: buildUrl + "/f9eb0730aa3d8811c2fe455f56ee1a80.framework.js.unityweb",
+        codeUrl: buildUrl + "/512f02485376691ffe966360abfa103e.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "RODale",
         productName: "RO Dale",
@@ -60,7 +60,7 @@
         devicePixelRatio: Math.min(window.devicePixelRatio || 1, /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 1.75 : 2),
       };
       var script = document.createElement("script");
-      script.src = buildUrl + "/WebGL.loader.js";
+      script.src = buildUrl + "/558401e3061a32a08c68cd782a1f19e2.loader.js";
       script.onload = function () {
         createUnityInstance(canvas, config, function (p) {
           document.querySelector("#fill").style.width = (100 * p) + "%";
