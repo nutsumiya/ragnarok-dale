@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#7ec8f2">
+    <title>RO Dale</title>
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #7ec8f2;
+        background: radial-gradient(circle at 50% 30%, #bfe6ff 0%, #7ec8f2 55%, #5aa8e0 100%);
+        touch-action: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+      /* portrait 9:16 frame centred on desktop, full screen on phones */
+      #frame { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+        height: 100%; aspect-ratio: 9 / 16; max-width: 100%; background: #2b1d14; overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,.35); border-radius: 18px; }
+      @media (max-aspect-ratio: 3/4) { #frame { width: 100%; height: 100%; aspect-ratio: auto; border-radius: 0; box-shadow: none; } }
+      #unity-canvas { width: 100%; height: 100%; display: block; background: #8fd65a; outline: none; }
+      #loader { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        background: radial-gradient(circle at 50% 35%, #ffe9a8 0%, #ffc94a 60%, #f0a24a 100%); font-family: "Trebuchet MS", sans-serif; }
+      #logo { font-size: 13vmin; line-height: .9; font-weight: 900; color: #fff6c9; text-align: center;
+        text-shadow: 0 .6vmin 0 #b5651d, 0 1.4vmin 2vmin rgba(0,0,0,.25); letter-spacing: .3vmin; }
+      #poring { width: 22vmin; height: 18vmin; margin: 6vmin 0 4vmin; background: #ff9ec4; border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%;
+        position: relative; animation: hop .7s ease-in-out infinite; box-shadow: inset -2vmin -2vmin 0 rgba(0,0,0,.08); }
+      #poring:before, #poring:after { content: ""; position: absolute; top: 40%; width: 2.6vmin; height: 3.6vmin; background: #2a1a24; border-radius: 50%; }
+      #poring:before { left: 34%; } #poring:after { right: 34%; }
+      @keyframes hop { 0%,100% { transform: translateY(0) scale(1.08, .92); } 50% { transform: translateY(-5vmin) scale(.95, 1.05); } }
+      #bar { width: 60%; height: 3.4vmin; border-radius: 2vmin; background: rgba(90,50,20,.35); overflow: hidden; }
+      #fill { width: 0%; height: 100%; background: linear-gradient(#9cf07a, #5fd65a); border-radius: 2vmin; transition: width .2s; }
+      #hint { margin-top: 3vmin; color: #6b3d18; font-size: 3.6vmin; font-weight: 700; }
+      #warn { position: absolute; left: 0; right: 0; top: 0; z-index: 5; color: #fff; font: 14px sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div id="frame">
+      <canvas id="unity-canvas" tabindex="-1"></canvas>
+      <div id="loader"><div id="logo">Ragnarok<br>Dale</div><div id="poring"></div><div id="bar"><div id="fill"></div></div><div id="hint">Loading Prontera...</div></div>
+      <div id="warn"></div>
+    </div>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+      function unityShowBanner(msg, type) {
+        var w = document.querySelector("#warn"), d = document.createElement("div");
+        d.innerHTML = msg; d.style.padding = "8px"; d.style.background = type == "error" ? "#d33" : "#c90";
+        w.appendChild(d); if (type != "error") setTimeout(function () { w.removeChild(d); }, 5000);
+      }
+      var buildUrl = "Build";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/WebGL.data.unityweb",
+        frameworkUrl: buildUrl + "/WebGL.framework.js.unityweb",
+        codeUrl: buildUrl + "/WebGL.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "RODale",
+        productName: "RO Dale",
+        productVersion: "0.1.0",
+        showBanner: unityShowBanner,
+        // phones have 3x screens; cap the render resolution to keep it smooth
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 1.75 : 2),
+      };
+      var script = document.createElement("script");
+      script.src = buildUrl + "/WebGL.loader.js";
+      script.onload = function () {
+        createUnityInstance(canvas, config, function (p) {
+          document.querySelector("#fill").style.width = (100 * p) + "%";
+        }).then(function () {
+          document.querySelector("#loader").style.display = "none";
+        }).catch(function (m) { alert(m); });
+      };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
